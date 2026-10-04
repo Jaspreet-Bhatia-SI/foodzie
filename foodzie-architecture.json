@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Foodzie Campus Platform",
+    "output": "foodzie-architecture.html",
+    "quality_profile": "standard",
+    "views": [
+      { "id": "student-flow", "label": "Ordering Flow", "focus": ["users", "nginx", "frontend", "backend", "db"], "note": "Students order food via the PWA. Nginx routes traffic to Next.js and Express." },
+      { "id": "realtime-kds", "label": "Real-time KDS & Tracking", "focus": ["users", "nginx", "backend", "db"], "note": "WebSockets (Socket.io) connect Riders and Vendors for real-time Kitchen Display and GPS." }
+    ]
+  },
+  "components": [
+    { "id": "users", "type": "external", "label": "Campus Users", "sublabel": "Students / Riders / Vendors", "pos": [50, 150], "size": [160, 60] },
+    { "id": "nginx", "type": "cloud", "label": "Nginx", "sublabel": "Reverse Proxy", "pos": [300, 150], "size": [140, 60] },
+    { "id": "frontend", "type": "frontend", "label": "Next.js App", "sublabel": "SSR / Client React", "pos": [550, 50], "size": [140, 60] },
+    { "id": "backend", "type": "backend", "label": "Express + Socket.io", "sublabel": "Node.js REST / WS", "pos": [550, 250], "size": [140, 60] },
+    { "id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "Supabase (via Prisma)", "pos": [800, 250], "size": [140, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "AWS EC2 Ubuntu Instance", "wraps": ["nginx", "frontend", "backend"] }
+  ],
+  "connections": [
+    { "id": "c1", "from": "users", "to": "nginx", "label": "HTTPS / WSS" },
+    { "id": "c2", "from": "nginx", "to": "frontend", "label": "/ proxy" },
+    { "id": "c3", "from": "nginx", "to": "backend", "label": "/api & /socket proxy", "fromSide": "bottom", "toSide": "left", "labelDy": 20 },
+    { "id": "c4", "from": "frontend", "to": "backend", "label": "API Calls", "fromSide": "bottom", "toSide": "top", "labelDy": 30 },
+    { "id": "c5", "from": "backend", "to": "db", "label": "Prisma ORM" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Real-Time Tracking", "items": ["Socket.io pushes rider GPS coordinates directly to the frontend Map", "Kitchen Display System (KDS) updates orders instantly for vendors"] },
+    { "dot": "amber", "title": "Gamification Engine", "items": ["Students earn Campus Credits via orders", "Top 3 Customer leaderboard populated by PostgreSQL aggregate queries"] }
+  ]
+}
