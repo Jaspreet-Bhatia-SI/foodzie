@@ -125,7 +125,7 @@ sequenceDiagram
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/Jaspreet-Bhatia-AI/foodzie.git
+    git clone https://github.com/Jaspreet-Bhatia-SI/foodzie.git
     cd foodzie
     ```
 
